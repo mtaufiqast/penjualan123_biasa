@@ -41,6 +41,12 @@ class DatabaseSeeder extends Seeder
             'address' => 'Jl....'
         ]);
 
+        Pelanggan::create([
+            'name' => 'Pembeli',
+            'phone' => '1234',
+            'address' => 'Jl....'
+        ]);
+
         Produk::create([
             'kode_produk' => '8993988260349',
             'name' => 'Produk A',
@@ -52,7 +58,7 @@ class DatabaseSeeder extends Seeder
             'kode_produk' => '8998838680896',
             'name' => 'Produk B',
             'price' => 10000,
-            'stok' => 0
+            'stok' => 100
         ]);
     }
 }

@@ -45,7 +45,7 @@ class PenjualanController extends Controller
         return redirect('/penjualan');
     }
 
-    public function bayar(string $id)
+    public function bayar(string $id, Request $request)
     {
         $id_penjualan = $id;
         $penjualan = Penjualan::find($id);
@@ -72,10 +72,23 @@ class PenjualanController extends Controller
             $produk->decrement('stok', $ps2->jml);
             $penjualan->update([
                 'status' => 1,
+                'total_amount' => $request->total_harga,
+                'paid_amount' => $request->bayar,
+                'change_amount' => $request->kembalian
             ]);
         }
 
         return redirect('/penjualan');
+    }
+
+
+    public function cetak($id)
+    {
+        // Ambil data penjualan berdasarkan ID beserta detail barang
+        $penjualan = Penjualan::with('detail.produk')->findOrFail($id);
+
+        // Kirim data ke view cetak
+        return view('home.penjualan.cetak', compact('penjualan'));
     }
 
     /**

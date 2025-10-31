@@ -6,6 +6,7 @@ use App\Models\Pesanan;
 use App\Models\Penjualan;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PesananController extends Controller
 {
@@ -21,7 +22,7 @@ class PesananController extends Controller
 
         // Ambil data pesanan dan hitung jumlah per produk
         $pesanan = Pesanan::query()
-            ->select('id_penjualan', 'id_produk', \DB::raw('SUM(jumlah) as jml'))
+            ->select('id_penjualan', 'id_produk', DB::raw('SUM(jumlah) as jml'))
             ->where('id_penjualan', $id_penjualan)
             ->groupBy('id_produk')
             ->with('Produk') // agar bisa akses $pesanan->Produk->name dan price di view

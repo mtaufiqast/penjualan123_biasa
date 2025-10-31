@@ -17,6 +17,8 @@ return new class extends Migration
             $table->decimal('total_amount', 15, 2);
             $table->decimal('paid_amount', 15, 2);
             $table->decimal('change_amount', 15, 2);
+            $table->integer('disc');
+            $table->decimal('total_setelah_diskon', 15, 2);
             $table->integer('id_pelanggan');
             $table->integer('status');
             $table->timestamps();

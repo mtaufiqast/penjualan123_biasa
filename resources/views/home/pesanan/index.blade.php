@@ -109,36 +109,54 @@
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                                <button type="button" class="close" data-dismiss="modal"
+                                            <div class="modal-header bg-success text-white">
+                                                <h5 class="modal-title" id="exampleModalLabel">Pembayaran</h5>
+                                                <button type="button" class="close text-white" data-dismiss="modal"
                                                     aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
+
                                             <div class="modal-body">
                                                 <form action="{{ route('penjualan.bayar', $id_penjualan) }}"
                                                     method="POST">
                                                     @csrf
                                                     <div class="modal-body">
+
+                                                        {{-- Total Bayar Sebelum Diskon --}}
                                                         <div class="mb-3">
                                                             <label>Total Bayar</label>
                                                             <input type="number" class="form-control" name="total_harga"
-                                                                id="total_harga{{ $id_penjualan }}" 
-                                                                {{-- @php
-$total =$pesanan->jml * $pesanan->Produk->price; @endphp --}}
-                                                                <input type="number" class="form-control"
-                                                                name="total_harga" id="total_harga{{ $id_penjualan }}"
+                                                                id="total_harga{{ $id_penjualan }}"
                                                                 value="{{ $grandTotal }}" readonly>
-
                                                         </div>
 
+                                                        {{-- Diskon --}}
+                                                        <div class="mb-3">
+                                                            <label>Diskon (%)</label>
+                                                            <input type="number" class="form-control" name="disc"
+                                                                id="diskon{{ $id_penjualan }}" value="0"
+                                                                min="0" max="100" required>
+                                                            <small class="text-muted">Masukkan antara 1 - 100%</small>
+                                                        </div>
+
+                                                        {{-- Total Setelah Diskon --}}
+                                                        <div class="mb-3">
+                                                            <label>Total Setelah Diskon</label>
+                                                            <input type="number" class="form-control"
+                                                                name="total_setelah_diskon"
+                                                                id="total_setelah_diskon{{ $id_penjualan }}"
+                                                                value="{{ $grandTotal }}" readonly>
+                                                        </div>
+
+                                                        {{-- Jumlah Bayar --}}
                                                         <div class="mb-3">
                                                             <label>Jumlah Bayar</label>
                                                             <input type="number" class="form-control" name="bayar"
                                                                 id="bayar{{ $id_penjualan }}" required>
                                                         </div>
 
+                                                        {{-- Kembalian --}}
                                                         <div class="mb-3">
                                                             <label>Kembalian</label>
                                                             <input type="number" class="form-control" name="kembalian"
@@ -157,19 +175,39 @@ $total =$pesanan->jml * $pesanan->Produk->price; @endphp --}}
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Script hitung kembalian otomatis -->
+                                <!-- Script Hitung Otomatis -->
                                 <script>
                                     document.addEventListener("DOMContentLoaded", function() {
                                         const total = document.getElementById('total_harga{{ $id_penjualan }}');
+                                        const diskon = document.getElementById('diskon{{ $id_penjualan }}');
+                                        const totalSetelahDiskon = document.getElementById('total_setelah_diskon{{ $id_penjualan }}');
                                         const bayar = document.getElementById('bayar{{ $id_penjualan }}');
                                         const kembali = document.getElementById('kembalian{{ $id_penjualan }}');
 
-                                        if (bayar && total && kembali) {
-                                            bayar.addEventListener('input', function() {
-                                                const totalVal = parseInt(total.value) || 0;
-                                                const bayarVal = parseInt(bayar.value) || 0;
-                                                kembali.value = bayarVal - totalVal >= 0 ? bayarVal - totalVal : 0;
-                                            });
+                                        function hitungTotal() {
+                                            let totalVal = parseFloat(total.value) || 0;
+                                            let diskonVal = parseFloat(diskon.value) || 0;
+
+                                            // Validasi diskon
+                                            if (diskonVal < 0) diskon.value = 0;
+                                            if (diskonVal > 100) diskon.value = 100;
+
+                                            let totalDiskon = totalVal - (totalVal * diskonVal / 100);
+                                            totalSetelahDiskon.value = totalDiskon.toFixed(0);
+
+                                            hitungKembalian(); // update juga kembalian otomatis
+                                        }
+
+                                        function hitungKembalian() {
+                                            let totalVal = parseFloat(totalSetelahDiskon.value) || 0;
+                                            let bayarVal = parseFloat(bayar.value) || 0;
+                                            kembali.value = bayarVal - totalVal >= 0 ? bayarVal - totalVal : 0;
+                                        }
+
+                                        // Event listener
+                                        if (total && bayar && kembali && diskon) {
+                                            diskon.addEventListener('input', hitungTotal);
+                                            bayar.addEventListener('input', hitungKembalian);
                                         }
                                     });
                                 </script>

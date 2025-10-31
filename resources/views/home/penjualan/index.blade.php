@@ -36,6 +36,8 @@
                                                 <th scope="col">#</th>
                                                 <th scope="col">Tanggal</th>
                                                 <th scope="col">Total Harga</th>
+                                                <th scope="col">Discount</th>
+                                                <th scope="col">Total Setelah Discount</th>
                                                 <th scope="col">Bayar</th>
                                                 <th scope="col">Kembalian</th>
                                                 <th scope="col">Pelanggan</th>
@@ -49,6 +51,8 @@
                                                     <td scope="row">{{ $loop->iteration }}</td>
                                                     <td>{{ $penjualan->tanggal }}</td>
                                                     <td>{{ $penjualan->total_amount }}</td>
+                                                    <td>{{ $penjualan->disc }}</td>
+                                                    <td>{{ $penjualan->total_setelah_diskon }}</td>
                                                     <td>{{ $penjualan->paid_amount }}</td>
                                                     <td>{{ $penjualan->change_amount }}</td>
                                                     <td>{{ $penjualan->Pelanggan->name }}</td>

@@ -74,7 +74,9 @@ class PenjualanController extends Controller
                 'status' => 1,
                 'total_amount' => $request->total_harga,
                 'paid_amount' => $request->bayar,
-                'change_amount' => $request->kembalian
+                'change_amount' => $request->kembalian,
+                'disc' => $request->disc,
+                'total_setelah_diskon' => $request->total_setelah_diskon,
             ]);
         }
 
